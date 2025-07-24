@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload to Cloudinary</title>
+</head>
+<body>
+  <h2>Upload Image to Cloudinary</h2>
+  <input type="file" accept="image/*" onchange="uploadImage(event)" />
+  <p id="status"></p>
+  <img id="preview" src="" style="display:none;" width="300">
+
+  <script>
+    function uploadImage(event) {
+      const file = event.target.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // 👇 Replace with your Cloudinary upload preset
+      formData.append("upload_preset", "mobile_upload");
+
+      // 👇 Replace with your Cloudinary cloud name
+      fetch("https://api.cloudinary.com/v1_1/Crop Monitoring/image/upload", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('status').innerText = "Upload successful!";
+        document.getElementById('preview').src = data.secure_url;
+        document.getElementById('preview').style.display = "block";
+      })
+      .catch(err => {
+        document.getElementById('status').innerText = "Upload failed!";
+        console.error(err);
+      });
+    }
+  </script>
+</body>
+</html>
